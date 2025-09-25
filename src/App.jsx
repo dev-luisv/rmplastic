@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 
 /**
- * RM Plastic Transformation — Landing Page (actualizado)
+ * RM Plastic Transformation — Landing Page
  * Paleta:
  *  - Navy:  #0B2A3C
  *  - Steel: #0E3952
@@ -29,7 +29,7 @@ import {
 
 const LOGO_SRC = "/rm-logo.png"; // desde /public
 
-// 🔧 QUICK EDIT (edita aquí y listo)
+// 🔧 QUICK EDIT
 const CONFIG = {
   tagline: "PLASTIC TRANSFORMATION",
   heroTitle: "Transformación de plástico por inyección",
@@ -45,7 +45,6 @@ const CONFIG = {
     empresa2: "/empresa2.png",
     empresa3: "/empresa3.png",
     empresa4: "/empresa4.png",
-    // ahora mostramos 12 en total (3 filas de 4)
     gallery: [
       "/g1.jpg",
       "/g2.jpg",
@@ -69,8 +68,7 @@ const WHATSAPP_NUMBER = CONFIG.whatsNumber;
 const WHATSAPP_MESSAGE = "Hola, me interesa una cotización. Vengo del sitio web.";
 
 /**
- * ORDEN DE NAVEGACIÓN:
- * Inicio • Empresa • Mercado • Productos • Galería • Contacto
+ * NAV: Inicio • Empresa • Mercado • Productos • Galería • Contacto
  * (Productos va antes que Galería)
  */
 const NAV = [
@@ -89,14 +87,7 @@ function Header() {
       <div className="mx-auto max-w-7xl px-4 py-2 flex items-center justify-between">
         {/* Logo circular que sobresale */}
         <a href="#inicio" className="relative block">
-          <div
-            className="
-              relative h-[80px] w-[80px] md:h-[88px] md:w-[88px]
-              rounded-full overflow-hidden bg-white ring-2 ring-white shadow-xl
-              translate-y-3
-            "
-          >
-            {/* Ajusta padding para escalar el logo */}
+          <div className="relative h-[80px] w-[80px] md:h-[88px] md:w-[88px] rounded-full overflow-hidden bg-white ring-2 ring-white shadow-xl translate-y-3">
             <img src={LOGO_SRC} alt="RM" className="h-full w-full object-contain p-2 bg-[#0B2A3C]" />
           </div>
         </a>
@@ -155,32 +146,23 @@ function Header() {
   );
 }
 
-/* ===================== Hero (overlay mejorado para móvil) ===================== */
+/* ===================== Hero (overlay debajo del contenido) ===================== */
+/* ===================== Hero (arreglo: fondo visible + botones sin oscurecer) ===================== */
 function Hero() {
   return (
-    <section
-      id="inicio"
-      className="relative overflow-hidden scroll-mt-28 md:scroll-mt-32"
-    >
-      {/* Gradiente base */}
+    <section id="inicio" className="relative isolate overflow-hidden scroll-mt-28 md:scroll-mt-32">
+      {/* Fondo base (gradiente) */}
       <div
-        className="absolute inset-0 -z-10"
+        className="absolute inset-0 z-0"
         style={{ background: `linear-gradient(135deg, ${CONFIG.brand.navy}, ${CONFIG.brand.steel})` }}
       />
-      {/* Velo de contraste:
-          - En móvil: cubre 100% y es más oscuro para máxima legibilidad
-          - md: 3/4 de ancho con opacidad media
-          - lg: 2/3 de ancho (look hero clásico)
-      */}
-      <div className="
-        pointer-events-none absolute inset-0 h-full w-full md:w-3/4 lg:w-2/3 -z-0
-        bg-gradient-to-r from-black/80 to-transparent
-        md:from-black/50
-      " />
+      {/* Velo oscuro hacia la izquierda (no toca botones porque está debajo del contenido) */}
+      <div className="absolute left-0 top-0 h-full w-[92%] md:w-[78%] z-0 bg-gradient-to-r from-black/35 to-transparent" />
 
-      <div className="mx-auto max-w-7xl px-4 py-20 md:py-28">
+      {/* Contenido por encima */}
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-20 md:py-28">
         <div className="grid md:grid-cols-2 gap-10 items-center">
-          <div className="max-w-xl md:max-w-2xl">
+          <div>
             <p
               className="inline-block rounded-full px-3 py-1 text-xs tracking-wider text-white"
               style={{ backgroundColor: CONFIG.brand.accent }}
@@ -188,23 +170,11 @@ function Hero() {
               {CONFIG.tagline}
             </p>
 
-            <h1
-              className="
-                mt-4 text-4xl md:text-5xl font-extrabold text-white leading-tight
-                drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)]
-              "
-            >
+            <h1 className="mt-4 text-4xl md:text-5xl font-extrabold text-white leading-tight drop-shadow-md">
               {CONFIG.heroTitle}
             </h1>
 
-            <p
-              className="
-                mt-4 text-white/95 text-lg
-                drop-shadow-[0_2px_6px_rgba(0,0,0,0.35)]
-              "
-            >
-              {CONFIG.heroSubtitle}
-            </p>
+            <p className="mt-4 text-white/90 text-lg drop-shadow">{CONFIG.heroSubtitle}</p>
 
             <div className="mt-6 flex flex-col sm:flex-row gap-3">
               <a
@@ -222,7 +192,7 @@ function Hero() {
               </a>
             </div>
 
-            <ul className="mt-6 grid grid-cols-2 gap-4 text-white/90 text-sm">
+            <ul className="mt-6 grid grid-cols-2 gap-4 text-white/80 text-sm">
               <li className="flex items-center gap-2">
                 <ShieldCheck size={18} /> Calidad reconocida a nivel nacional
               </li>
@@ -256,12 +226,12 @@ function Hero() {
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </section>
   );
 }
+
 
 /* ===================== Video Modal ===================== */
 function VideoModal({ open, onClose, src }) {
@@ -284,16 +254,25 @@ function VideoModal({ open, onClose, src }) {
   );
 }
 
-/* ===================== Empresa (4 fotos + video wide) ===================== */
+/* ===================== Empresa ===================== */
 function Empresa() {
   const [open, setOpen] = useState(false);
-  const videoSrc = "/video.mp4"; // si está en /public
-  const videoCover = "/video-cover.jpg"; // opcional
+  const videoSrc = "/video.mp4";
+  const videoCover = "/video-cover.jpg";
 
-  const img1 = CONFIG.images.empresa1 || "";
-  const img2 = CONFIG.images.empresa2 || "";
-  const img3 = CONFIG.images.empresa3 || "";
-  const img4 = CONFIG.images.empresa4 || "";
+  const img1 =
+    CONFIG.images.empresa1 ||
+    "https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=1600&auto=format&fit=crop";
+  const img2 =
+    CONFIG.images.empresa2 ||
+    "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=1600&auto=format&fit=crop";
+  const img3 =
+    CONFIG.images.empresa3 ||
+    "https://images.unsplash.com/photo-1610908958829-559b0b8c2c2c?q=80&w=1600&auto=format&fit=crop";
+  const img4 =
+    CONFIG.images.empresa4 ||
+    "https://images.unsplash.com/photo-1555949963-aa79dcee981d?q=80&w=1600&auto=format&fit=crop";
+
   const images = [img1, img2, img3, img4];
 
   return (
@@ -341,7 +320,7 @@ function Empresa() {
           </div>
         </div>
 
-        {/* 4 imágenes (arriba) + video largo (abajo) */}
+        {/* 4 imágenes + video ancho */}
         <div className="grid grid-cols-2 gap-4">
           {images.map((src, i) => (
             <div key={i} className="overflow-hidden rounded-2xl border border-slate-200">
@@ -351,7 +330,6 @@ function Empresa() {
             </div>
           ))}
 
-          {/* Cuadro de video largo: ocupa las 2 columnas */}
           <button
             type="button"
             onClick={() => setOpen(true)}
@@ -360,7 +338,7 @@ function Empresa() {
           >
             <div className="aspect-[32/9] w-full relative">
               <img
-                src={videoCover || img4}
+                src={videoCover || images[3]}
                 alt="Video cover"
                 className="absolute inset-0 h-full w-full object-cover"
               />
@@ -375,7 +353,6 @@ function Empresa() {
             </div>
           </button>
 
-          {/* Modal de video */}
           <VideoModal open={open} onClose={() => setOpen(false)} src={videoSrc} />
         </div>
       </div>
@@ -483,7 +460,7 @@ function Productos() {
   );
 }
 
-/* ===================== Galería (12 items) ===================== */
+/* ===================== Galería ===================== */
 function Galeria() {
   const g = CONFIG.images.gallery || [];
   return (
@@ -494,14 +471,14 @@ function Galeria() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {g.slice(0, 12).map((src, i) => (
+          {g.map((src, i) => (
             <div key={i} className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-              <div className="aspect-[4/3]">
+              <div className="aspect-[12/11]">
                 <img
                   src={src}
                   alt={`gal-${i + 1}`}
                   className="h-full w-full object-cover"
-                  loading="lazy"
+                  style={{ transform: "scale(1.0)", transformOrigin: "center" }}
                 />
               </div>
             </div>
@@ -522,7 +499,6 @@ function Contacto() {
     >
       <div className="mx-auto max-w-7xl px-4">
         <div className="grid lg:grid-cols-2 gap-10 items-start">
-          {/* Datos de contacto */}
           <div>
             <h2 className="text-3xl md:text-4xl font-extrabold">¿Listos para cotizar?</h2>
             <p className="mt-3 text-white/90">
@@ -541,7 +517,6 @@ function Contacto() {
             </div>
           </div>
 
-          {/* Formulario */}
           <form className="bg-white text-slate-900 rounded-2xl p-6 border border-slate-200 shadow min-h-[420px] flex flex-col">
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
@@ -554,7 +529,11 @@ function Contacto() {
               </div>
               <div>
                 <label className="text-sm font-medium">Correo</label>
-                <input type="email" className="mt-1 w-full rounded-xl border px-3 py-2" placeholder="tucorreo@dominio.com" />
+                <input
+                  type="email"
+                  className="mt-1 w-full rounded-xl border px-3 py-2"
+                  placeholder="tucorreo@dominio.com"
+                />
               </div>
               <div>
                 <label className="text-sm font-medium">Teléfono</label>
@@ -627,7 +606,6 @@ function WhatsAppFloat() {
 /* ===================== App ===================== */
 export default function App() {
   return (
-    // scroll-smooth para que el salto con anclas sea suave
     <main className="min-h-dvh bg-white text-slate-900 scroll-smooth">
       <Header />
       <Hero />
