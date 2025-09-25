@@ -45,6 +45,7 @@ const CONFIG = {
     empresa2: "/empresa2.png",
     empresa3: "/empresa3.png",
     empresa4: "/empresa4.png",
+    // ahora mostramos 12 en total (3 filas de 4)
     gallery: [
       "/g1.jpg",
       "/g2.jpg",
@@ -54,7 +55,6 @@ const CONFIG = {
       "/g6.jpg",
       "/g7.jpg",
       "/g8.jpg",
-      // 👇 nuevas
       "/g9.jpg",
       "/g10.jpg",
       "/g11.jpg",
@@ -155,31 +155,57 @@ function Header() {
   );
 }
 
-/* ===================== Hero ===================== */
+/* ===================== Hero (overlay mejorado para móvil) ===================== */
 function Hero() {
   return (
-    <section id="inicio" className="relative overflow-hidden scroll-mt-28 md:scroll-mt-32">
+    <section
+      id="inicio"
+      className="relative overflow-hidden scroll-mt-28 md:scroll-mt-32"
+    >
+      {/* Gradiente base */}
       <div
         className="absolute inset-0 -z-10"
         style={{ background: `linear-gradient(135deg, ${CONFIG.brand.navy}, ${CONFIG.brand.steel})` }}
       />
-      {/* ⬇️ Velado oscuro MÁS ancho (mejor contraste del título).
-          Ajusta aquí: w-3/4 ==> mueve más a la derecha el fondo oscuro. */}
-      <div className="pointer-events-none absolute left-0 top-0 h-full w-9/10 -z-0 bg-gradient-to-r from-black/35 to-transparent md:w-[78%]" />
+      {/* Velo de contraste:
+          - En móvil: cubre 100% y es más oscuro para máxima legibilidad
+          - md: 3/4 de ancho con opacidad media
+          - lg: 2/3 de ancho (look hero clásico)
+      */}
+      <div className="
+        pointer-events-none absolute inset-0 h-full w-full md:w-3/4 lg:w-2/3 -z-0
+        bg-gradient-to-r from-black/80 to-transparent
+        md:from-black/50
+      " />
 
       <div className="mx-auto max-w-7xl px-4 py-20 md:py-28">
         <div className="grid md:grid-cols-2 gap-10 items-center">
-          <div>
+          <div className="max-w-xl md:max-w-2xl">
             <p
               className="inline-block rounded-full px-3 py-1 text-xs tracking-wider text-white"
               style={{ backgroundColor: CONFIG.brand.accent }}
             >
               {CONFIG.tagline}
             </p>
-            <h1 className="mt-4 text-4xl md:text-5xl font-extrabold text-white leading-tight drop-shadow-md">
+
+            <h1
+              className="
+                mt-4 text-4xl md:text-5xl font-extrabold text-white leading-tight
+                drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)]
+              "
+            >
               {CONFIG.heroTitle}
             </h1>
-            <p className="mt-4 text-white/90 text-lg drop-shadow">{CONFIG.heroSubtitle}</p>
+
+            <p
+              className="
+                mt-4 text-white/95 text-lg
+                drop-shadow-[0_2px_6px_rgba(0,0,0,0.35)]
+              "
+            >
+              {CONFIG.heroSubtitle}
+            </p>
+
             <div className="mt-6 flex flex-col sm:flex-row gap-3">
               <a
                 href="#contacto"
@@ -195,7 +221,8 @@ function Hero() {
                 Ver productos
               </a>
             </div>
-            <ul className="mt-6 grid grid-cols-2 gap-4 text-white/80 text-sm">
+
+            <ul className="mt-6 grid grid-cols-2 gap-4 text-white/90 text-sm">
               <li className="flex items-center gap-2">
                 <ShieldCheck size={18} /> Calidad reconocida a nivel nacional
               </li>
@@ -229,6 +256,7 @@ function Hero() {
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </section>
@@ -256,25 +284,16 @@ function VideoModal({ open, onClose, src }) {
   );
 }
 
-/* ===================== Empresa ===================== */
+/* ===================== Empresa (4 fotos + video wide) ===================== */
 function Empresa() {
   const [open, setOpen] = useState(false);
-  const videoSrc = "/video.mp4"; // tu video (en /public)
+  const videoSrc = "/video.mp4"; // si está en /public
   const videoCover = "/video-cover.jpg"; // opcional
 
-  const img1 =
-    CONFIG.images.empresa1 ||
-    "https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=1600&auto=format&fit=crop";
-  const img2 =
-    CONFIG.images.empresa2 ||
-    "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=1600&auto=format&fit=crop";
-  const img3 =
-    CONFIG.images.empresa3 ||
-    "https://images.unsplash.com/photo-1610908958829-559b0b8c2c2c?q=80&w=1600&auto=format&fit=crop";
-  const img4 =
-    CONFIG.images.empresa4 ||
-    "https://images.unsplash.com/photo-1555949963-aa79dcee981d?q=80&w=1600&auto=format&fit=crop";
-
+  const img1 = CONFIG.images.empresa1 || "";
+  const img2 = CONFIG.images.empresa2 || "";
+  const img3 = CONFIG.images.empresa3 || "";
+  const img4 = CONFIG.images.empresa4 || "";
   const images = [img1, img2, img3, img4];
 
   return (
@@ -324,7 +343,6 @@ function Empresa() {
 
         {/* 4 imágenes (arriba) + video largo (abajo) */}
         <div className="grid grid-cols-2 gap-4">
-          {/* 4 imágenes 4:3 */}
           {images.map((src, i) => (
             <div key={i} className="overflow-hidden rounded-2xl border border-slate-200">
               <div className="aspect-[4/3]">
@@ -342,7 +360,7 @@ function Empresa() {
           >
             <div className="aspect-[32/9] w-full relative">
               <img
-                src={videoCover || images[3]}
+                src={videoCover || img4}
                 alt="Video cover"
                 className="absolute inset-0 h-full w-full object-cover"
               />
@@ -465,7 +483,7 @@ function Productos() {
   );
 }
 
-/* ===================== Galería (12 imágenes) ===================== */
+/* ===================== Galería (12 items) ===================== */
 function Galeria() {
   const g = CONFIG.images.gallery || [];
   return (
@@ -476,15 +494,14 @@ function Galeria() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {/* mostramos todas (12) */}
-          {g.map((src, i) => (
+          {g.slice(0, 12).map((src, i) => (
             <div key={i} className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-              <div className="aspect-[12/11]">
+              <div className="aspect-[4/3]">
                 <img
                   src={src}
                   alt={`gal-${i + 1}`}
                   className="h-full w-full object-cover"
-                   style={{ transform: 'scale(1.0)', transformOrigin: 'center' }} // ajusta 1.00–1.20
+                  loading="lazy"
                 />
               </div>
             </div>
@@ -496,7 +513,6 @@ function Galeria() {
 }
 
 /* ===================== Contacto ===================== */
-/* Se quitó la imagen de ubicación */
 function Contacto() {
   return (
     <section
@@ -506,7 +522,7 @@ function Contacto() {
     >
       <div className="mx-auto max-w-7xl px-4">
         <div className="grid lg:grid-cols-2 gap-10 items-start">
-          {/* SOLO datos de contacto (sin imagen de ubicación) */}
+          {/* Datos de contacto */}
           <div>
             <h2 className="text-3xl md:text-4xl font-extrabold">¿Listos para cotizar?</h2>
             <p className="mt-3 text-white/90">
@@ -538,11 +554,7 @@ function Contacto() {
               </div>
               <div>
                 <label className="text-sm font-medium">Correo</label>
-                <input
-                  type="email"
-                  className="mt-1 w-full rounded-xl border px-3 py-2"
-                  placeholder="tucorreo@dominio.com"
-                />
+                <input type="email" className="mt-1 w-full rounded-xl border px-3 py-2" placeholder="tucorreo@dominio.com" />
               </div>
               <div>
                 <label className="text-sm font-medium">Teléfono</label>
