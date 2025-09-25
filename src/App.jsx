@@ -43,8 +43,8 @@ const CONFIG = {
     hero: "/prensa550.png",
     empresa1: "/empresa1.png",
     empresa2: "/empresa2.png",
-    empresa3: "/empresa3.png", 
-    empresa4: "/empresa4.png",    
+    empresa3: "/empresa3.png",
+    empresa4: "/empresa4.png",
     gallery: [
       "/g1.jpg",
       "/g2.jpg",
@@ -54,6 +54,11 @@ const CONFIG = {
       "/g6.jpg",
       "/g7.jpg",
       "/g8.jpg",
+      // 👇 nuevas
+      "/g9.jpg",
+      "/g10.jpg",
+      "/g11.jpg",
+      "/g12.jpg",
     ],
   },
   brand: { navy: "#0B2A3C", steel: "#0E3952", accent: "#1B5A7D", whats: "#25D366" },
@@ -66,7 +71,7 @@ const WHATSAPP_MESSAGE = "Hola, me interesa una cotización. Vengo del sitio web
 /**
  * ORDEN DE NAVEGACIÓN:
  * Inicio • Empresa • Mercado • Productos • Galería • Contacto
- * (Ahora Productos va antes que Galería)
+ * (Productos va antes que Galería)
  */
 const NAV = [
   { href: "#inicio", label: "Inicio" },
@@ -153,15 +158,14 @@ function Header() {
 /* ===================== Hero ===================== */
 function Hero() {
   return (
-    <section
-      id="inicio"
-      className="relative overflow-hidden scroll-mt-28 md:scroll-mt-32"
-    >
+    <section id="inicio" className="relative overflow-hidden scroll-mt-28 md:scroll-mt-32">
       <div
         className="absolute inset-0 -z-10"
         style={{ background: `linear-gradient(135deg, ${CONFIG.brand.navy}, ${CONFIG.brand.steel})` }}
       />
-      <div className="pointer-events-none absolute left-0 top-0 h-full w-2/3 -z-0 bg-gradient-to-r from-black/35 to-transparent" />
+      {/* ⬇️ Velado oscuro MÁS ancho (mejor contraste del título).
+          Ajusta aquí: w-3/4 ==> mueve más a la derecha el fondo oscuro. */}
+      <div className="pointer-events-none absolute left-0 top-0 h-full w-9/10 -z-0 bg-gradient-to-r from-black/35 to-transparent md:w-[78%]" />
 
       <div className="mx-auto max-w-7xl px-4 py-20 md:py-28">
         <div className="grid md:grid-cols-2 gap-10 items-center">
@@ -252,11 +256,11 @@ function VideoModal({ open, onClose, src }) {
   );
 }
 
-/* ===================== Empresa (actualizado) ===================== */
+/* ===================== Empresa ===================== */
 function Empresa() {
   const [open, setOpen] = useState(false);
-  const videoSrc = "/video.mp4"; // Pon aquí tu video (en /public)
-  const videoCover = "/video-cover.jpg"; // opcional; si no existe usa img4
+  const videoSrc = "/video.mp4"; // tu video (en /public)
+  const videoCover = "/video-cover.jpg"; // opcional
 
   const img1 =
     CONFIG.images.empresa1 ||
@@ -322,10 +326,7 @@ function Empresa() {
         <div className="grid grid-cols-2 gap-4">
           {/* 4 imágenes 4:3 */}
           {images.map((src, i) => (
-            <div
-              key={i}
-              className="overflow-hidden rounded-2xl border border-slate-200"
-            >
+            <div key={i} className="overflow-hidden rounded-2xl border border-slate-200">
               <div className="aspect-[4/3]">
                 <img src={src} alt={`Planta ${i + 1}`} className="h-full w-full object-cover" />
               </div>
@@ -341,7 +342,7 @@ function Empresa() {
           >
             <div className="aspect-[32/9] w-full relative">
               <img
-                src={videoCover || img4}
+                src={videoCover || images[3]}
                 alt="Video cover"
                 className="absolute inset-0 h-full w-full object-cover"
               />
@@ -363,7 +364,6 @@ function Empresa() {
     </section>
   );
 }
-
 
 /* ===================== Mercado ===================== */
 function Mercado() {
@@ -465,7 +465,7 @@ function Productos() {
   );
 }
 
-/* ===================== Galería ===================== */
+/* ===================== Galería (12 imágenes) ===================== */
 function Galeria() {
   const g = CONFIG.images.gallery || [];
   return (
@@ -476,10 +476,16 @@ function Galeria() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {g.slice(0, 8).map((src, i) => (
+          {/* mostramos todas (12) */}
+          {g.map((src, i) => (
             <div key={i} className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-              <div className="aspect-[4/3]">
-                <img src={src} alt={`gal-${i + 1}`} className="h-full w-full object-cover" loading="lazy" />
+              <div className="aspect-[12/11]">
+                <img
+                  src={src}
+                  alt={`gal-${i + 1}`}
+                  className="h-full w-full object-cover"
+                   style={{ transform: 'scale(1.0)', transformOrigin: 'center' }} // ajusta 1.00–1.20
+                />
               </div>
             </div>
           ))}
@@ -532,7 +538,11 @@ function Contacto() {
               </div>
               <div>
                 <label className="text-sm font-medium">Correo</label>
-                <input type="email" className="mt-1 w-full rounded-xl border px-3 py-2" placeholder="tucorreo@dominio.com" />
+                <input
+                  type="email"
+                  className="mt-1 w-full rounded-xl border px-3 py-2"
+                  placeholder="tucorreo@dominio.com"
+                />
               </div>
               <div>
                 <label className="text-sm font-medium">Teléfono</label>
